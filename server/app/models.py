@@ -16,7 +16,17 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import BigInteger, Boolean, DateTime, ForeignKey, String, Uuid, func
+from sqlalchemy import (
+    BigInteger,
+    Boolean,
+    DateTime,
+    ForeignKey,
+    String,
+    Uuid,
+    func,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -56,16 +66,42 @@ class RefreshToken(Base):
     )
     user: Mapped["User"] = relationship(back_populates="refresh_tokens")
 
-class GamePayload(Base):
-    __tablename__ = "game_payload"
+class File(Base):
+    __tablename__ = "file"
 
-    uuid: Mapped[str] = mapped_column(Uuid, primary_key=True)
-    refresh_token: Mapped[str] = mapped_column(
-        String(512), nullable=False, unique=True, index=True
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, nullable=False, autoincrement=True)
+    device_id: Mapped[int] = mapped_column(ForeignKey("device.id"))
+
+    file_path: Mapped[Text] = mapped_column(Text, nullable=False)
+    original_content: Mapped[Text] = mapped_column(Text, nullable=False)
+
+    device: Mapped["Device"] = relationship(back_populates="files", lazy="selectin")
+
+class Device(Base):
+    __tablename__ = "device"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, nullable=False, autoincrement=True)
+    uuid: Mapped[str] = mapped_column(Uuid, nullable=False, unique=True)
+    statuses: Mapped[list["DeviceStatus"] | None] = relationship(
+        back_populates="device", cascade="all, delete-orphan", lazy="selectin"
     )
-    used: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
-    exp: Mapped[int] = mapped_column(BigInteger, nullable=False)
-    user_id: Mapped[str] = mapped_column(
-        ForeignKey("user_account.user_id", ondelete="CASCADE"),
-    )
-    user: Mapped["User"] = relationship(back_populates="refresh_tokens")
+    files: Mapped[list[File] | None]  = relationship(back_populates="device", lazy="selectin")
+
+
+
+class DeviceStatus(Base):
+    __tablename__ = "device_status"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, nullable=False, autoincrement=True)
+    ip_address: Mapped[str] = mapped_column(String(45))
+
+    device_id: Mapped[int] = mapped_column(ForeignKey("device.id"))
+    file_id: Mapped[int | None] = mapped_column(ForeignKey("file.id"), nullable=True)
+
+    status: Mapped[str] = mapped_column(String(20), nullable=False)
+
+    device: Mapped[Device] = relationship(back_populates="statuses", lazy="selectin")
+    file: Mapped[File | None] = relationship(uselist=False)
+
+
+

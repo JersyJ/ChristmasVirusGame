@@ -8,7 +8,7 @@ from app.core.config import get_settings
 app = FastAPI(
     title="Command Control Server",
     version="1.0.0",
-    description="PVBPS ChristmasVirusGame Command Control Server",
+    description="PVBPS Christmas Virus Game Command Control Server",
     openapi_url="/openapi.json",
     docs_url="/",
 )

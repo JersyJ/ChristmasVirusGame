@@ -27,7 +27,7 @@ poetry run <command>
 poetry install
 ```
 
-### 3. Create `.env` file
+### 2. Create `.env` file
 
 ```bash
 # Create copy of .env.example file
