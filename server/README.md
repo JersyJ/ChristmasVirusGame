@@ -38,7 +38,7 @@ cp .env.example .env
 
 ```bash
 # Run database
-docker-compose up -d
+docker compose up -d
 
 # Run Alembic migrations
 alembic upgrade head

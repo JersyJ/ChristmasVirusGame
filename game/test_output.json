@@ -1,0 +1,40 @@
+[
+{
+    "UID": "00000000-0000-0000-0000-080027c3ff56",
+    "IP": "10.0.2.15",
+    "status": "starting",
+    "encryption_key": "WuGyrbREjFXB4Z9HcWnrUjhMBYyX-a7JAONr4OrlN1M="
+},
+{
+    "UID": "00000000-0000-0000-0000-080027c3ff56",
+    "IP": "10.0.2.15",
+    "file": {
+        "file_path": "C:\\Users\\User\\Desktop\\data\\F1\\aaa1 - Copy (2).txt",
+        "original_content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vulputate mollis velit, in placerat magna viverra in. Curabitur luctus justo vel sapien"
+    },
+    "status": "running"
+},
+{
+    "UID": "00000000-0000-0000-0000-080027c3ff56",
+    "IP": "10.0.2.15",
+    "file": {
+        "file_path": "C:\\Users\\User\\Desktop\\data\\F1\\aaa1 - Copy.txt",
+        "original_content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vulputate mollis velit, in placerat magna viverra in. Curabitur luctus justo vel sapien"
+    },
+    "status": "running"
+},
+{
+    "UID": "00000000-0000-0000-0000-080027c3ff56",
+    "IP": "10.0.2.15",
+    "file": {
+        "file_path": "C:\\Users\\User\\Desktop\\data\\F1\\aaa1.txt",
+        "original_content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vulputate mollis velit, in placerat magna viverra in. Curabitur luctus justo vel sapien"
+    },
+    "status": "running"
+},
+{
+    "UID": "00000000-0000-0000-0000-080027c3ff56",
+    "IP": "10.0.2.15",
+    "status": "completed"
+}
+]

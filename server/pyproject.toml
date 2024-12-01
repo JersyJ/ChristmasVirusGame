@@ -1,7 +1,7 @@
 [tool.poetry]
 authors = ["admin <admin@example.com>"]
-description = "FastAPI project generated using minimal-fastapi-postgres-template."
-name = "app"
+description = "PVBPS Christmas Virus Game Command Control Server"
+name = "Command Control Server"
 version = "0.1.0-alpha"
 
 [tool.poetry.dependencies]

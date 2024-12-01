@@ -55,3 +55,17 @@ class RefreshToken(Base):
         ForeignKey("user_account.user_id", ondelete="CASCADE"),
     )
     user: Mapped["User"] = relationship(back_populates="refresh_tokens")
+
+class GamePayload(Base):
+    __tablename__ = "game_payload"
+
+    uuid: Mapped[str] = mapped_column(Uuid, primary_key=True)
+    refresh_token: Mapped[str] = mapped_column(
+        String(512), nullable=False, unique=True, index=True
+    )
+    used: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    exp: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    user_id: Mapped[str] = mapped_column(
+        ForeignKey("user_account.user_id", ondelete="CASCADE"),
+    )
+    user: Mapped["User"] = relationship(back_populates="refresh_tokens")
