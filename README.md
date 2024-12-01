@@ -9,7 +9,9 @@ The game simulates ransomware targeting specific file types (`.txt`, `.docx`, `.
 - Size  
 - Last modification date  
 - Keywords in the file name  
-- File location  
+- File location
+
+More details about the game can be found in the `game/README.md` file.
 
 ## Server Functionality
 
@@ -57,5 +59,6 @@ The server provides several endpoints to manage devices and their statuses:
 - **Description**: Retrieves all files of a device by its ID.  
 - **Response**: `DeviceFilesResponse`  
 
+How to run/develop the server is described in the `server/README.md` file.
 
 This project showcases the integration of virus infected game with a backend server, offering a complete example of how a game with a simulated virus can interact with a server for payload transmission and data management.
