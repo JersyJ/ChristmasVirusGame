@@ -1,15 +1,15 @@
-FROM python:3.12.5-slim-bullseye as base
+FROM python:3.12.5-slim-bullseye AS base
 
 ENV PYTHONUNBUFFERED 1
 WORKDIR /build
 
 # Create requirements.txt file
-FROM base as poetry
+FROM base AS poetry
 RUN pip install poetry==1.8.2
 COPY poetry.lock pyproject.toml ./
 RUN poetry export -o /requirements.txt --without-hashes
 
-FROM base as common
+FROM base AS common
 COPY --from=poetry /requirements.txt .
 # Create venv, add it to path and install requirements
 RUN python -m venv /venv

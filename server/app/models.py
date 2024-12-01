@@ -87,8 +87,6 @@ class Device(Base):
     )
     files: Mapped[list[File] | None]  = relationship(back_populates="device", lazy="selectin")
 
-
-
 class DeviceStatus(Base):
     __tablename__ = "device_status"
 
@@ -102,6 +100,3 @@ class DeviceStatus(Base):
 
     device: Mapped[Device] = relationship(back_populates="statuses", lazy="selectin")
     file: Mapped[File | None] = relationship(uselist=False)
-
-
-

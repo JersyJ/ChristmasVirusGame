@@ -18,6 +18,28 @@ services:
       - .env
     ports:
       - "${DATABASE__PORT}:5432"
+  app:
+    restart: unless-stopped
+    profiles: [prod]
+    depends_on:
+      - postgres_db
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: common
+    environment:
+      - SECURITY__JWT_SECRET_KEY=${SECURITY__JWT_SECRET_KEY}
+      - SECURITY__BACKEND_CORS_ORIGINS=${SECURITY__BACKEND_CORS_ORIGINS}
+      - SECURITY__ALLOWED_HOSTS=${SECURITY__ALLOWED_HOSTS}
+      - DATABASE__PASSWORD=${DATABASE__PASSWORD}
+      - DATABASE__HOSTNAME=postgres_db
+      - DATABASE__USERNAME=${DATABASE__USERNAME}
+      - DATABASE__PORT=5432
+      - DATABASE__DB=${DATABASE__DB}
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
 
 volumes:
   postgres_db:

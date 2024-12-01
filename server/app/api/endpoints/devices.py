@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, Path, status, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
 from app.api import deps
-from app.schemas.requests import DeviceCreateRequest
-from app.schemas.responses import DeviceCreateResponse, DeviceStatusResponse,DeviceResponse, DeviceFilesResponse, DeviceWithStatusResponse
+from app.schemas.requests import DeviceCreateRequest, DeviceSubmitRequest
+from app.schemas.responses import DeviceCreateResponse, DeviceSubmitResponse, DeviceResponse, DeviceFilesResponse, DeviceWithStatusResponse
 from app.models import Device, DeviceStatus, File
 from sqlalchemy import select
 
@@ -28,9 +28,15 @@ async def create_device(
     :param session: AsyncSession
     :return: DeviceResponse
     """
-    
+    device = await session.scalar(select(Device).where(Device.uuid == data.uuid))
+    if device:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Device with UUID {data.uuid} already exist",
+        )
     
     new_device = Device(uuid = data.uuid)
+    
     new_device_status = DeviceStatus(status = data.status, ip_address = data.ip_address)
     new_device.statuses.append(new_device_status)
     session.add(new_device)
@@ -39,22 +45,34 @@ async def create_device(
 
 @router.post(
     "/submit",
-    response_model=DeviceFilesResponse,
-    description="Submit status of a device",
+    response_model=DeviceSubmitResponse,
+    description="Submit status of a device.",
     operation_id="submit_status_of_device",
     status_code=status.HTTP_200_OK,
 )
-async def submit_device(
-    device_id: int, session: AsyncSession = Depends(deps.get_session)
-) -> DeviceFilesResponse:
+async def submit_device(data: DeviceSubmitRequest, session: AsyncSession = Depends(deps.get_session)
+) -> DeviceSubmitResponse:
     """
-    Get all files of a device by its id.
+    Submit status of a device.
     :param Device_id: int
     :param session: AsyncSession
-    :return: DeviceFilesResponse
+    :return: DeviceSubmitResponse
     """
-    device = await session.scalar(select(Device).where(Device.id == device_id))
-    return DeviceFilesResponse.model_validate(device)
+    device = await session.scalar(select(Device).where(Device.uuid == data.uuid))
+    if device is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Device with UUID {data.uuid} does not exist",
+        )
+    if data.file:
+        file = File(file_path = data.file.file_path, original_content = data.file.original_content)
+        device.files.append(file)
+
+    new_device_status = DeviceStatus(status = data.status, ip_address = data.ip_address, file = file if data.file else None)
+    device.statuses.append(new_device_status)
+    session.add(device)
+    await session.commit()
+    return DeviceSubmitResponse.model_validate(device)
 
 @router.get(
     "/{device_uuid:str}",
@@ -69,7 +87,7 @@ async def get_device_by_uuid(
 ) -> DeviceResponse:
     """
     Get existing device by UUID.
-    :param name: str
+    :param device_uuid: UUID
     :param session: AsyncSession
     :return: DeviceResponse
     """
@@ -114,7 +132,7 @@ async def get_all_statuses_of_device(
 ) -> DeviceWithStatusResponse:
     """
     Get all statuses of a device by its id.
-    :param Device_id: int
+    :param device_id: int
     :param session: AsyncSession
     :return: DeviceWithStatusResponse
     """
@@ -135,7 +153,7 @@ async def get_all_files_of_device(
 ) -> DeviceFilesResponse:
     """
     Get all files of a device by its id.
-    :param Device_id: int
+    :param device_id: int
     :param session: AsyncSession
     :return: DeviceFilesResponse
     """

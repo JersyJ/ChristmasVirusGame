@@ -1,5 +1,13 @@
 # Command control server
 
+## Run with Docker Compose on localhost:8000
+
+```bash
+docker compose --profile prod up -d
+```
+
+# Command control server Developer Guide
+
 - [Command control server](#command-control-server)
   - [Quickstart](#quickstart)
     - [1. Install dependecies with Poetry](#1-install-dependecies-with-poetry)

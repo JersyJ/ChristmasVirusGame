@@ -1,10 +1,9 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from uuid import UUID
 
 class BaseRequest(BaseModel):
     # may define additional fields or config shared across requests
     pass
-
 
 class RefreshTokenRequest(BaseRequest):
     refresh_token: str
@@ -32,4 +31,4 @@ class DeviceSubmitRequest(BaseRequest):
     uuid : UUID = Field(..., description="The UUID of the device", examples=["00000000-0000-0000-0000-080027c3ff56"])
     ip_address: str = Field(..., description="The IP address of the device", min_length=1, max_length=45, examples=["10.0.2.15"])
     status: str = Field(..., description="The status of the device", min_length=1, max_length=20, examples=["running", "completed"])
-    file: FileCreateRequest = Field(description="The file to be submitted")
+    file: FileCreateRequest | None = Field(None, description="The file submitted with the status", examples=[{"file_path": "C:\\Users\\User\\Desktop\\data\\F1\\aaa1 - Copy.txt", "original_content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vulputate mollis velit, in placerat magna viverra in. Curabitur luctus justo vel sapien"}])
